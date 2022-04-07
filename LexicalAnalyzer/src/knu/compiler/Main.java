@@ -54,10 +54,13 @@ public class Main {
 
                 }
 
-
-
-
                 //16진수 처리 끝
+
+                //실수형 상수 처리 시작
+
+
+
+                //실수형 상수 처리 끝
 
                 System.out.println(String.format("%1$-14s line %2$d cols %3$d-%4$d is T_IntConstant (token value: %5$s)", temp, lineNum, colNum - temp.length(), colNum - 1, temp));
 
