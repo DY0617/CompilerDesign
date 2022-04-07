@@ -16,6 +16,7 @@ public class Main {
         File file = new File("tests/samples/program2.decaf");
         Scanner scanner = new Scanner(file);
 
+        
         inputText = scanner.nextLine();
         while (scanner.hasNextLine()) {
             inputText = inputText + "\n" + scanner.nextLine();
