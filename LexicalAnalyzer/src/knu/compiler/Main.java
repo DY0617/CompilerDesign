@@ -13,10 +13,10 @@ public class Main {
         String inputText = "";
         List<String> memory = new ArrayList<>();
 
-        File file = new File("tests/samples/program2.decaf");
+        File file = new File("tests/samples/number.frag");
         Scanner scanner = new Scanner(file);
 
-        
+
         inputText = scanner.nextLine();
         while (scanner.hasNextLine()) {
             inputText = inputText + "\n" + scanner.nextLine();
@@ -41,6 +41,23 @@ public class Main {
                 }
 
                 // How to deal with floating-point numbers?
+                //16진수 처리 시작
+
+
+                while (i < string.length) {
+                    if (string[i] >= '0' && string[i] <= '9' || string[i] == 'x' || string[i] == 'X' || (string[i] >= 'a' && string[i] <= 'f') || (string[i] >= 'A' && string[i] <= 'F')) {
+                        temp += string[i];
+                        i++;
+                        colNum++;
+                    } else
+                        break;
+
+                }
+
+
+
+
+                //16진수 처리 끝
 
                 System.out.println(String.format("%1$-14s line %2$d cols %3$d-%4$d is T_IntConstant (token value: %5$s)", temp, lineNum, colNum - temp.length(), colNum - 1, temp));
 
@@ -67,12 +84,11 @@ public class Main {
                         temp.equals("Print") || temp.equals("break") || temp.equals("return") || temp.equals("this") ||
                         temp.equals("new") || temp.equals("ReadInteger") || temp.equals("ReadLine") || temp.equals("NewArray") ||
                         temp.equals("int") || temp.equals("double") || temp.equals("bool") || temp.equals("string") ||
-                        temp.equals("id") || temp.equals("null")){
+                        temp.equals("id") || temp.equals("null")) {
                     System.out.println(String.format("%1$-14s line %2$d cols %3$d-%4$d is T_%5$s", temp, lineNum, colNum - temp.length(), colNum - 1, temp.substring(0, 1).toUpperCase() + temp.substring(1)));
                 } else if (temp.equals("true") || temp.equals("false")) {
                     System.out.println(String.format("%1$-14s line %2$d cols %3$d-%4$d is T_BoolConstant (token value: %5$s)", temp, lineNum, colNum - temp.length(), colNum - 1, temp));
-                }
-                else {  // 키워드(타입), 식별자
+                } else {  // 키워드(타입), 식별자
                     // How to deal with identifiers?
                 }
 
@@ -103,7 +119,7 @@ public class Main {
                     colNum++;
                 }
 
-                if (i < string.length &&  string[i] == '"') {
+                if (i < string.length && string[i] == '"') {
                     temp += string[i];
                 }
 
@@ -127,8 +143,8 @@ public class Main {
 
             if (string[i] == '=' || string[i] == '!' || string[i] == '<' || string[i] == '>') {
                 String temp = "" + string[i];
-                if (string[i+1] == '=') {
-                    temp += string[i+1];
+                if (string[i + 1] == '=') {
+                    temp += string[i + 1];
                     i++;
                     colNum++;
                 }
@@ -138,7 +154,7 @@ public class Main {
 
             if (string[i] == '&') {
                 String temp = "" + string[i];
-                if (string[i+1] == '&') {
+                if (string[i + 1] == '&') {
                     temp += string[i + 1];
                     i++;
                     colNum++;
@@ -149,8 +165,8 @@ public class Main {
 
             if (string[i] == '|') {
                 String temp = "" + string[i];
-                if (string[i+1] == '|') {
-                    temp += string[i+1];
+                if (string[i + 1] == '|') {
+                    temp += string[i + 1];
                     i++;
                     colNum++;
                     System.out.println(String.format("%1$-14s line %2$d cols %3$d-%4$d is '%5$s'", temp, lineNum, colNum, colNum + temp.length() - 1, temp));
