@@ -13,7 +13,7 @@ public class Main {
         String inputText = "";
         List<String> memory = new ArrayList<>();
 
-        File file = new File("tests/samples/number.frag");
+        File file = new File("tests/samples/badint.frag");
         Scanner scanner = new Scanner(file);
 
 
@@ -31,41 +31,75 @@ public class Main {
             boolean unknown_char = true;
             colNum++;
 
+
             if (string[i] >= '0' && string[i] <= '9') {
                 String temp = "";
 
-                while (i < string.length && string[i] >= '0' && string[i] <= '9') {
-                    temp += string[i];
-                    i++;
-                    colNum++;
-                }
+                boolean doubleBool = false;
+                boolean hex = false;
 
-                // How to deal with floating-point numbers?
-                //16진수 처리 시작
-
-
-                while (i < string.length) {
-                    if (string[i] >= '0' && string[i] <= '9' || string[i] == 'x' || string[i] == 'X' || (string[i] >= 'a' && string[i] <= 'f') || (string[i] >= 'A' && string[i] <= 'F')) {
+                if (string[i] == '0' && (string[i + 1] == 'x' || string[i + 1] == 'X')) {
+                    if (string[i + 2] != '\n'||(!(string[i+2] >= 'a' && string[i+2] <= 'f') && !(string[i+2] >= 'A' && string[i+2] <= 'F') && string[i+2] != '.'&&!(string[i+2] >= '0' && string[i+2] <= '9'))) {
+                        hex = true;
                         temp += string[i];
+                        temp += string[i + 1];
+                        i += 2;
+
+
+                        while (i < string.length) {
+                            if (string[i] >= '0' && string[i] <= '9' ||
+                                    (string[i] >= 'a' && string[i] <= 'f') || (string[i] >= 'A' && string[i] <= 'F') || string[i] == '.') {
+                                if (string[i] == '.')
+                                    doubleBool = true;
+                                temp += string[i];
+                                i++;
+                                colNum++;
+                            } else
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        temp+=string[i];
                         i++;
                         colNum++;
-                    } else
-                        break;
+                        hex=false;
 
+                    }
+                } else {
+                    while (i < string.length) {
+                        if (string[i] >= '0' && string[i] <= '9' ||
+                                string[i] == '.') {
+                            if (string[i] == '.')
+                                doubleBool = true;
+                            temp += string[i];
+                            i++;
+                            colNum++;
+                        } else
+                            break;
+                    }
                 }
 
-                //16진수 처리 끝
+                String temp2 = "";
+                if (hex == true) {
+                    temp2 = temp.substring(2);
+                    temp2 = String.valueOf(Integer.parseInt(temp2, 16));
 
-                //실수형 상수 처리 시작
+                    if (doubleBool == true) {
+                        System.out.println(String.format("%1$-14s line %2$d cols %3$d-%4$d is T_DoubleConstant (token value: %5$s)", temp, lineNum, colNum - temp.length(), colNum - 1, temp2));
+                    } else if (doubleBool == false)
+                        System.out.println(String.format("%1$-14s line %2$d cols %3$d-%4$d is T_IntConstant (token value: %5$s)", temp, lineNum, colNum - temp.length(), colNum - 1, temp2));
 
+                } else {
+                    if (doubleBool == true) {
+                        System.out.println(String.format("%1$-14s line %2$d cols %3$d-%4$d is T_DoubleConstant (token value: %5$s)", temp, lineNum, colNum - temp.length(), colNum - 1, temp));
+                    } else if (doubleBool == false)
+                        System.out.println(String.format("%1$-14s line %2$d cols %3$d-%4$d is T_IntConstant (token value: %5$s)", temp, lineNum, colNum - temp.length(), colNum - 1, temp));
 
-
-                //실수형 상수 처리 끝
-
-                System.out.println(String.format("%1$-14s line %2$d cols %3$d-%4$d is T_IntConstant (token value: %5$s)", temp, lineNum, colNum - temp.length(), colNum - 1, temp));
-
+                }
                 unknown_char = false;
             }
+
 
             if ((string[i] >= 'A' && string[i] <= 'Z') || string[i] == '_' || (string[i] >= 'a' && string[i] <= 'z')) {
                 String temp = "";
@@ -93,6 +127,9 @@ public class Main {
                     System.out.println(String.format("%1$-14s line %2$d cols %3$d-%4$d is T_BoolConstant (token value: %5$s)", temp, lineNum, colNum - temp.length(), colNum - 1, temp));
                 } else {  // 키워드(타입), 식별자
                     // How to deal with identifiers?
+                    if (!memory.contains(temp))
+                        memory.add(temp);
+                    System.out.println(String.format("%1$-14s line %2$d cols %3$d-%4$d is T_Identifier (token address: %5$s)", temp, lineNum, colNum - temp.length(), colNum - 1, memory.indexOf(temp) + 1));
                 }
 
                 if (i >= string.length) {
@@ -178,6 +215,23 @@ public class Main {
             }
 
             // How to deal with single-line and multi-line comments?
+            if (string[i] == '/') {
+                if (string[i + 1] == '/') {
+                    while (string[i + 1] != '\n')
+                        i++;
+
+                    i++;
+                } else if (string[i + 1] == '*') {
+                    while (string[i] != '*' || string[i + 1] != '/')
+                        i++;
+
+                    i += 2;
+                } else {
+                    String temp = "" + string[i];
+                    System.out.println(String.format("%1$-14s line %2$d cols %3$d-%4$d is '%5$s'", temp, lineNum, colNum, colNum + temp.length() - 1, temp));
+                    unknown_char = false;
+                }
+            }
 
             if (string[i] == '\n') {
                 colNum = 0;
