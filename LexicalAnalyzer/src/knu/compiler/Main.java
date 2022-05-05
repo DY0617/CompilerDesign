@@ -5,6 +5,9 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.math.*;
+
+import static java.lang.Double.parseDouble;
 
 public class Main {
 
@@ -13,7 +16,7 @@ public class Main {
         String inputText = "";
         List<String> memory = new ArrayList<>();
 
-        File file = new File("tests/samples/badint.frag");
+        File file = new File("tests/samples/baddouble.frag");
         Scanner scanner = new Scanner(file);
 
 
@@ -37,12 +40,17 @@ public class Main {
 
                 boolean doubleBool = false;
                 boolean hex = false;
+                boolean hasE=false;
+                String ifHasE="";
+                String hasEpost="";
+                String hasEop="";
 
                 if (string[i] == '0' && (string[i + 1] == 'x' || string[i + 1] == 'X')) {
-                    if (string[i + 2] != '\n'||(!(string[i+2] >= 'a' && string[i+2] <= 'f') && !(string[i+2] >= 'A' && string[i+2] <= 'F') && string[i+2] != '.'&&!(string[i+2] >= '0' && string[i+2] <= '9'))) {
+                    if (string[i + 2] != '\n'&&((string[i+2] >= 'a' && string[i+2] <= 'f') || (string[i+2] >= 'A' && string[i+2] <= 'F') || (string[i+2] >= '0' && string[i+2] <= '9'))) {
                         hex = true;
                         temp += string[i];
                         temp += string[i + 1];
+                        colNum+=2;
                         i += 2;
 
 
@@ -69,12 +77,47 @@ public class Main {
                 } else {
                     while (i < string.length) {
                         if (string[i] >= '0' && string[i] <= '9' ||
-                                string[i] == '.') {
+                                string[i] == '.'||string[i]=='E'||string[i]=='e') {
                             if (string[i] == '.')
                                 doubleBool = true;
+                            if(string[i]=='E'||string[i]=='e') {
+                                if(string[i+1]=='+'||string[i+1]=='-'){
+                                    if(string[i+2] >= '0' && string[i+2] <= '9'){
+                                        hasE = true;
+                                        hasEpost=temp;
+                                        temp += string[i];
+                                        i++;
+                                        colNum++;
+                                        temp += string[i];
+                                        hasEop+=string[i];
+                                        i++;
+                                        colNum++;
+                                        temp += string[i];
+                                        ifHasE+=string[i];
+                                        i++;
+                                        colNum++;
+                                        while(i<string.length){
+                                            if (string[i] >= '0' && string[i] <= '9'){
+                                                temp += string[i];
+                                                ifHasE+=string[i];
+                                                i++;
+                                                colNum++;
+                                            }
+                                            else
+                                                break;
+                                        }
+                                    }
+                                    else
+                                        break;
+                                }
+                                else
+                                    break;
+                            }
+                            else{
                             temp += string[i];
                             i++;
                             colNum++;
+                            }
                         } else
                             break;
                     }
@@ -91,10 +134,23 @@ public class Main {
                         System.out.println(String.format("%1$-14s line %2$d cols %3$d-%4$d is T_IntConstant (token value: %5$s)", temp, lineNum, colNum - temp.length(), colNum - 1, temp2));
 
                 } else {
+                    if(hasE==true){
+                        double a=0;
+                        if(hasEop=="-"){
+                            double b=-1*(Double.parseDouble(ifHasE));
+                            a=Double.parseDouble(hasEpost)*Math.pow(10,b);
+                        }
+                        else{
+                            a=Double.parseDouble(hasEpost)*Math.pow(10,(Double.parseDouble(ifHasE)));
+                        }
+                        temp2=String.valueOf(a);
+                    }
+                    else
+                        temp2=temp;
                     if (doubleBool == true) {
-                        System.out.println(String.format("%1$-14s line %2$d cols %3$d-%4$d is T_DoubleConstant (token value: %5$s)", temp, lineNum, colNum - temp.length(), colNum - 1, temp));
+                        System.out.println(String.format("%1$-14s line %2$d cols %3$d-%4$d is T_DoubleConstant (token value: %5$s)", temp, lineNum, colNum - temp.length(), colNum - 1, temp2));
                     } else if (doubleBool == false)
-                        System.out.println(String.format("%1$-14s line %2$d cols %3$d-%4$d is T_IntConstant (token value: %5$s)", temp, lineNum, colNum - temp.length(), colNum - 1, temp));
+                        System.out.println(String.format("%1$-14s line %2$d cols %3$d-%4$d is T_IntConstant (token value: %5$s)", temp, lineNum, colNum - temp.length(), colNum - 1, temp2));
 
                 }
                 unknown_char = false;
