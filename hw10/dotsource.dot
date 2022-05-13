@@ -1,0 +1,2 @@
+digraph G {
+E1->F1;F1->id1_a;E1->Ep1;Ep1->or1;Ep1->F2;F2->id2_b;Ep1->Ep2;Ep2->eps1;id1_a[color=green];or1[color=green];id2_b[color=green];eps1[color=red];}
