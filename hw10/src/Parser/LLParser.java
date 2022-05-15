@@ -77,7 +77,7 @@ public class LLParser {
          *
          * 논터미널 기호의 이름은 첫 글자가 알파벳 대문자인 영문을 사용하도록 코드를 작성해주세요.
          */
-        String[] symbolArray = new String[]{"E", "Ep", "F",
+        String[] symbolArray = new String[]{"E", "Ep", "F", "Fp", "G", "Gp", "H", "Hp", "I", "Ip", "J", "Jp", "K",
                 "or", "and", "eq", "neq", "ll", "le", "gg", "ge", "sum", "sub", "mul", "div", "mod", "not", "lP", "rP",
                 "con", "ths", "rdI", "rdL", "new", "id", "nwA", "typ", "com", "eps"};
 
@@ -288,11 +288,25 @@ public class LLParser {
     }
 
     static void PI_prime(int currentNodeNum) {
-        if (nextSymbol.equals("id")) {
-            addConnection(currentNodeNum, "F", "id", symbolList.get(index).getValue());
-            id();
+        if (nextSymbol.equals("+")) {
+            addConnection(currentNodeNum, "Ip", "sum", "");
+            sum();
+            addConnection(currentNodeNum, "Ip", "J", "");
+            PJ(symbolMap.get("J"));
+            addConnection(currentNodeNum, "Ip", "Ip", "");
+            PI_prime(symbolMap.get("Ip"));
+        } else if (nextSymbol.equals("-")) {
+            addConnection(currentNodeNum, "Ip", "sub", "");
+            sub();
+            addConnection(currentNodeNum, "Ip", "J", "");
+            PJ(symbolMap.get("J"));
+            addConnection(currentNodeNum, "Ip", "Ip", "");
+            PI_prime(symbolMap.get("Ip"));
+        } else if (nextSymbol.equals(")") || nextSymbol.equals(",") || nextSymbol.equals("$")) {
+            addConnection(currentNodeNum, "Ip", "eps", "");
+            epsilon();
         } else {
-            error("FIRST set of Non-terminal \'F\'");
+            error("|| or FOLLOW set of Non-terminal \'I'\'");
         }
     }
 
@@ -310,20 +324,84 @@ public class LLParser {
     }
 
     static void PJ_prime(int currentNodeNum) {
-        if (nextSymbol.equals("id")) {
-            addConnection(currentNodeNum, "F", "id", symbolList.get(index).getValue());
-            id();
+        if (nextSymbol.equals("*")) {
+            addConnection(currentNodeNum, "Jp", "mul", "");
+            mul();
+            addConnection(currentNodeNum, "Jp", "K", "");
+            PK(symbolMap.get("K"));
+            addConnection(currentNodeNum, "Jp", "Jp", "");
+            PJ_prime(symbolMap.get("Jp"));
+        } else if (nextSymbol.equals("/")) {
+            addConnection(currentNodeNum, "Jp", "div", "");
+            div();
+            addConnection(currentNodeNum, "Jp", "K", "");
+            PK(symbolMap.get("K"));
+            addConnection(currentNodeNum, "Jp", "Jp", "");
+            PJ_prime(symbolMap.get("Jp"));
+        } else if (nextSymbol.equals("%")) {
+            addConnection(currentNodeNum, "Jp", "mod", "");
+            mod();
+            addConnection(currentNodeNum, "Jp", "K", "");
+            PK(symbolMap.get("K"));
+            addConnection(currentNodeNum, "Jp", "Jp", "");
+            PJ_prime(symbolMap.get("Jp"));
+        } else if (nextSymbol.equals(")") || nextSymbol.equals(",") || nextSymbol.equals("$")) {
+            addConnection(currentNodeNum, "Jp", "eps", "");
+            epsilon();
         } else {
-            error("FIRST set of Non-terminal \'F\'");
+            error("|| or FOLLOW set of Non-terminal \'J'\'");
         }
     }
 
     static void PK(int currentNodeNum) {
-        if (nextSymbol.equals("id")) {
-            addConnection(currentNodeNum, "F", "id", symbolList.get(index).getValue());
+        if (nextSymbol.equals("-")) {
+            addConnection(currentNodeNum, "K", "K","");
+            sub();
+        }else if (nextSymbol.equals("!")) {
+            addConnection(currentNodeNum, "K", "K", "");
+            not();
+        }
+        else if (nextSymbol.equals("(")) {
+            addConnection(currentNodeNum, "K", "lP", "");
+            lP();
+            addConnection(currentNodeNum, "K", "E", "");
+            PE(symbolMap.get("E"));
+            addConnection(currentNodeNum, "K", "rP", "");
+            rP();
+        }
+        else if (nextSymbol.equals("Constant")) {
+            addConnection(currentNodeNum, "K", "con", symbolList.get(index).getValue());
+            con();
+        }
+        else if (nextSymbol.equals("this")) {
+            addConnection(currentNodeNum, "K", "ths", "");
+            ths();
+        }
+        else if (nextSymbol.equals("id")) {
+            addConnection(currentNodeNum, "K", "id", symbolList.get(index).getValue());
             id();
-        } else {
-            error("FIRST set of Non-terminal \'F\'");
+        }
+        else if (nextSymbol.equals("ReadInteger")) {
+            addConnection(currentNodeNum, "K", "rdl", "");
+            rdl();
+            addConnection(currentNodeNum, "K", "lP", "");
+            lP();
+            addConnection(currentNodeNum, "K", "rP", "");
+            rP();
+        }
+        else if (nextSymbol.equals("id")) {
+            addConnection(currentNodeNum, "K", "id", symbolList.get(index).getValue());
+            id();
+        }
+        else if (nextSymbol.equals("id")) {
+            addConnection(currentNodeNum, "K", "id", symbolList.get(index).getValue());
+            id();
+        }
+        else if (nextSymbol.equals("id")) {
+            addConnection(currentNodeNum, "K", "id", symbolList.get(index).getValue());
+            id();
+        }else {
+            error("FIRST set of Non-terminal \'K\'");
         }
     }
 
@@ -395,6 +473,93 @@ public class LLParser {
             error(">=");
     }
 
+    static void sum() {
+        if (nextSymbol.equals("+")) {
+            if (index < symbolList.size() - 1)
+                nextSymbol = symbolList.get(++index).getKey();
+        } else
+            error("-");
+    }
+
+    static void sub() {
+        if (nextSymbol.equals("-")) {
+            if (index < symbolList.size() - 1)
+                nextSymbol = symbolList.get(++index).getKey();
+        } else
+            error("-");
+    }
+
+    static void mul() {
+        if (nextSymbol.equals("*")) {
+            if (index < symbolList.size() - 1)
+                nextSymbol = symbolList.get(++index).getKey();
+        } else
+            error("*");
+    }
+
+    static void div() {
+        if (nextSymbol.equals("/")) {
+            if (index < symbolList.size() - 1)
+                nextSymbol = symbolList.get(++index).getKey();
+        } else
+            error("/");
+    }
+
+    static void mod() {
+        if (nextSymbol.equals("%")) {
+            if (index < symbolList.size() - 1)
+                nextSymbol = symbolList.get(++index).getKey();
+        } else
+            error("%");
+    }
+
+    static void not() {
+        if (nextSymbol.equals("!")) {
+            if (index < symbolList.size() - 1)
+                nextSymbol = symbolList.get(++index).getKey();
+        } else
+            error("!");
+    }
+
+    static void lP() {
+        if (nextSymbol.equals("(")) {
+            if (index < symbolList.size() - 1)
+                nextSymbol = symbolList.get(++index).getKey();
+        } else
+            error("(");
+    }
+
+    static void rP() {
+        if (nextSymbol.equals(")")) {
+            if (index < symbolList.size() - 1)
+                nextSymbol = symbolList.get(++index).getKey();
+        } else
+            error(")");
+    }
+
+    static void con() {
+        if (nextSymbol.equals("Constant")) {
+            if (index < symbolList.size() - 1)
+                nextSymbol = symbolList.get(++index).getKey();
+        } else
+            error("Constant");
+    }
+
+    static void ths() {
+        if (nextSymbol.equals("this")) {
+            if (index < symbolList.size() - 1)
+                nextSymbol = symbolList.get(++index).getKey();
+        } else
+            error("this");
+    }
+
+    static void rdl() {
+        if (nextSymbol.equals("ReadInteger")) {
+            if (index < symbolList.size() - 1)
+                nextSymbol = symbolList.get(++index).getKey();
+        } else
+            error("ReadInteger");
+    }
 
 
     /**
