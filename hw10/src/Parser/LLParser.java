@@ -192,21 +192,35 @@ public class LLParser {
         if (nextSymbol.equals("-") || nextSymbol.equals("!") || nextSymbol.equals("(") || nextSymbol.equals("Constant") ||
                 nextSymbol.equals("this") || nextSymbol.equals("ReadInteger") || nextSymbol.equals("ReadLine") ||
                 nextSymbol.equals("new") || nextSymbol.equals("id") || nextSymbol.equals("NewArray")) {
-            addConnection(currentNodeNum, "E", "F", "");
-            PF(symbolMap.get("F"));
-            addConnection(currentNodeNum, "E", "Ep", "");
-            PE_prime(symbolMap.get("Ep"));
+            addConnection(currentNodeNum, "G", "H", "");
+            PH(symbolMap.get("H"));
+            addConnection(currentNodeNum, "G", "Gp", "");
+            PG_prime(symbolMap.get("Gp"));
         } else {
-            error("FIRST set of Non-terminal \'E\'");
+            error("FIRST set of Non-terminal \'G\'");
         }
     }
 
     static void PG_prime(int currentNodeNum) {
-        if (nextSymbol.equals("id")) {
-            addConnection(currentNodeNum, "F", "id", symbolList.get(index).getValue());
-            id();
+        if (nextSymbol.equals("==")) {
+            addConnection(currentNodeNum, "Gp", "eq", "");
+            eq();
+            addConnection(currentNodeNum, "Gp", "H", "");
+            PH(symbolMap.get("H"));
+            addConnection(currentNodeNum, "Gp", "Gp", "");
+            PG_prime(symbolMap.get("Gp"));
+        } else if (nextSymbol.equals("!=")) {
+            addConnection(currentNodeNum, "Gp", "neq", "");
+            neq();
+            addConnection(currentNodeNum, "Gp", "H", "");
+            PH(symbolMap.get("H"));
+            addConnection(currentNodeNum, "Gp", "Gp", "");
+            PG_prime(symbolMap.get("Gp"));
+        } else if (nextSymbol.equals(")") || nextSymbol.equals(",") || nextSymbol.equals("$")) {
+            addConnection(currentNodeNum, "Gp", "eps", "");
+            epsilon();
         } else {
-            error("FIRST set of Non-terminal \'F\'");
+            error("|| or FOLLOW set of Non-terminal \'G'\'");
         }
     }
 
@@ -303,6 +317,22 @@ public class LLParser {
                 nextSymbol = symbolList.get(++index).getKey();
         } else
             error("&&");
+    }
+
+    static void eq() {
+        if (nextSymbol.equals("==")) {
+            if (index < symbolList.size() - 1)
+                nextSymbol = symbolList.get(++index).getKey();
+        } else
+            error("==");
+    }
+
+    static void neq() {
+        if (nextSymbol.equals("!=")) {
+            if (index < symbolList.size() - 1)
+                nextSymbol = symbolList.get(++index).getKey();
+        } else
+            error("!=");
     }
 
     /**
