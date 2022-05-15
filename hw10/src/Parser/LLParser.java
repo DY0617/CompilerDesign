@@ -93,6 +93,8 @@ public class LLParser {
         symbolMap.put("E", 1);
         PE(symbolMap.get("E"));
 
+
+
         if(nextSymbol.equals("$")) {
             System.out.println("Accept");
             createDotGraph("parsetree");
@@ -141,7 +143,23 @@ public class LLParser {
      * 논터미널 기호 F
      * 예시 코드에서만 정상 작동. 정답 코드에선 수정 필요.
      */
+    //여기부터 수정 시작
     static void PF(int currentNodeNum) {
+        if (nextSymbol.equals("-") || nextSymbol.equals("!") || nextSymbol.equals("(") || nextSymbol.equals("Constant") ||
+                nextSymbol.equals("this") || nextSymbol.equals("ReadInteger") || nextSymbol.equals("ReadLine") ||
+                nextSymbol.equals("new") || nextSymbol.equals("id") || nextSymbol.equals("NewArray")) {
+            addConnection(currentNodeNum,"E", "F", "");
+            PF(symbolMap.get("F"));
+            addConnection(currentNodeNum,"E", "Ep", "");
+            PE_prime(symbolMap.get("Ep"));
+        }
+        else {
+            error("FIRST set of Non-terminal \'E\'");
+        }
+    }
+
+
+    static void PF_prime(int currentNodeNum) {
         if (nextSymbol.equals("id")) {
             addConnection(currentNodeNum,"F", "id", symbolList.get(index).getValue());
             id();
@@ -150,6 +168,113 @@ public class LLParser {
             error("FIRST set of Non-terminal \'F\'");
         }
     }
+
+    static void PG(int currentNodeNum) {
+        if (nextSymbol.equals("-") || nextSymbol.equals("!") || nextSymbol.equals("(") || nextSymbol.equals("Constant") ||
+                nextSymbol.equals("this") || nextSymbol.equals("ReadInteger") || nextSymbol.equals("ReadLine") ||
+                nextSymbol.equals("new") || nextSymbol.equals("id") || nextSymbol.equals("NewArray")) {
+            addConnection(currentNodeNum,"E", "F", "");
+            PF(symbolMap.get("F"));
+            addConnection(currentNodeNum,"E", "Ep", "");
+            PE_prime(symbolMap.get("Ep"));
+        }
+        else {
+            error("FIRST set of Non-terminal \'E\'");
+        }
+    }
+
+    static void PG_prime(int currentNodeNum) {
+        if (nextSymbol.equals("id")) {
+            addConnection(currentNodeNum,"F", "id", symbolList.get(index).getValue());
+            id();
+        }
+        else {
+            error("FIRST set of Non-terminal \'F\'");
+        }
+    }
+
+    static void PH(int currentNodeNum) {
+        if (nextSymbol.equals("-") || nextSymbol.equals("!") || nextSymbol.equals("(") || nextSymbol.equals("Constant") ||
+                nextSymbol.equals("this") || nextSymbol.equals("ReadInteger") || nextSymbol.equals("ReadLine") ||
+                nextSymbol.equals("new") || nextSymbol.equals("id") || nextSymbol.equals("NewArray")) {
+            addConnection(currentNodeNum,"E", "F", "");
+            PF(symbolMap.get("F"));
+            addConnection(currentNodeNum,"E", "Ep", "");
+            PE_prime(symbolMap.get("Ep"));
+        }
+        else {
+            error("FIRST set of Non-terminal \'E\'");
+        }
+    }
+
+    static void PH_prime(int currentNodeNum) {
+        if (nextSymbol.equals("id")) {
+            addConnection(currentNodeNum,"F", "id", symbolList.get(index).getValue());
+            id();
+        }
+        else {
+            error("FIRST set of Non-terminal \'F\'");
+        }
+    }
+
+    static void PI(int currentNodeNum) {
+        if (nextSymbol.equals("-") || nextSymbol.equals("!") || nextSymbol.equals("(") || nextSymbol.equals("Constant") ||
+                nextSymbol.equals("this") || nextSymbol.equals("ReadInteger") || nextSymbol.equals("ReadLine") ||
+                nextSymbol.equals("new") || nextSymbol.equals("id") || nextSymbol.equals("NewArray")) {
+            addConnection(currentNodeNum,"E", "F", "");
+            PF(symbolMap.get("F"));
+            addConnection(currentNodeNum,"E", "Ep", "");
+            PE_prime(symbolMap.get("Ep"));
+        }
+        else {
+            error("FIRST set of Non-terminal \'E\'");
+        }
+    }
+
+    static void PI_prime(int currentNodeNum) {
+        if (nextSymbol.equals("id")) {
+            addConnection(currentNodeNum,"F", "id", symbolList.get(index).getValue());
+            id();
+        }
+        else {
+            error("FIRST set of Non-terminal \'F\'");
+        }
+    }
+
+    static void PJ(int currentNodeNum) {
+        if (nextSymbol.equals("-") || nextSymbol.equals("!") || nextSymbol.equals("(") || nextSymbol.equals("Constant") ||
+                nextSymbol.equals("this") || nextSymbol.equals("ReadInteger") || nextSymbol.equals("ReadLine") ||
+                nextSymbol.equals("new") || nextSymbol.equals("id") || nextSymbol.equals("NewArray")) {
+            addConnection(currentNodeNum,"E", "F", "");
+            PF(symbolMap.get("F"));
+            addConnection(currentNodeNum,"E", "Ep", "");
+            PE_prime(symbolMap.get("Ep"));
+        }
+        else {
+            error("FIRST set of Non-terminal \'E\'");
+        }
+    }
+
+    static void PJ_prime(int currentNodeNum) {
+        if (nextSymbol.equals("id")) {
+            addConnection(currentNodeNum,"F", "id", symbolList.get(index).getValue());
+            id();
+        }
+        else {
+            error("FIRST set of Non-terminal \'F\'");
+        }
+    }
+
+    static void PK(int currentNodeNum) {
+        if (nextSymbol.equals("id")) {
+            addConnection(currentNodeNum,"F", "id", symbolList.get(index).getValue());
+            id();
+        }
+        else {
+            error("FIRST set of Non-terminal \'F\'");
+        }
+    }
+
 
     /**
      * 터미널 기호 or

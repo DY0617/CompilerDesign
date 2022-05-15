@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="1f19be80-c6ce-4a17-83b1-79b7b7d8b60e" name="변경" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Parser/LLParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Parser/LLParser.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
