@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws FileNotFoundException {
-        File file = new File("./samples/a_or_b.decaf");
+        File file = new File("./samples/newarray.decaf");
         Scanner scanner = new Scanner(file);
         String inputText = scanner.nextLine();
 
