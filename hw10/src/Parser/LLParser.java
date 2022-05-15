@@ -382,24 +382,40 @@ public class LLParser {
             id();
         }
         else if (nextSymbol.equals("ReadInteger")) {
-            addConnection(currentNodeNum, "K", "rdl", "");
-            rdl();
+            addConnection(currentNodeNum, "K", "rdI", "");
+            rdI();
             addConnection(currentNodeNum, "K", "lP", "");
             lP();
             addConnection(currentNodeNum, "K", "rP", "");
             rP();
         }
-        else if (nextSymbol.equals("id")) {
+        else if (nextSymbol.equals("ReadLine")) {
+            addConnection(currentNodeNum, "K", "rdL", "");
+            rdL();
+            addConnection(currentNodeNum, "K", "lP", "");
+            lP();
+            addConnection(currentNodeNum, "K", "rP", "");
+            rP();
+        }
+        else if (nextSymbol.equals("new")) {
+            addConnection(currentNodeNum, "K", "new", "");
+            newId();
             addConnection(currentNodeNum, "K", "id", symbolList.get(index).getValue());
             id();
         }
-        else if (nextSymbol.equals("id")) {
-            addConnection(currentNodeNum, "K", "id", symbolList.get(index).getValue());
-            id();
-        }
-        else if (nextSymbol.equals("id")) {
-            addConnection(currentNodeNum, "K", "id", symbolList.get(index).getValue());
-            id();
+        else if (nextSymbol.equals("NewArray")) {
+            addConnection(currentNodeNum, "K", "nwA", "");
+            nwA();
+            addConnection(currentNodeNum, "K", "lP", "");
+            lP();
+            addConnection(currentNodeNum, "K", "E", "");
+            PE(symbolMap.get("E"));
+            addConnection(currentNodeNum, "K", "com", "");
+            com();
+            addConnection(currentNodeNum, "K", "typ", symbolList.get(index).getValue());
+            typ();
+            addConnection(currentNodeNum, "K", "rP", "");
+            rP();
         }else {
             error("FIRST set of Non-terminal \'K\'");
         }
@@ -553,12 +569,51 @@ public class LLParser {
             error("this");
     }
 
-    static void rdl() {
+    static void rdI() {
         if (nextSymbol.equals("ReadInteger")) {
             if (index < symbolList.size() - 1)
                 nextSymbol = symbolList.get(++index).getKey();
         } else
             error("ReadInteger");
+    }
+    static void rdL() {
+        if (nextSymbol.equals("ReadLine")) {
+            if (index < symbolList.size() - 1)
+                nextSymbol = symbolList.get(++index).getKey();
+        } else
+            error("ReadLine");
+    }
+
+    static void newId() {
+        if (nextSymbol.equals("new")) {
+            if (index < symbolList.size() - 1)
+                nextSymbol = symbolList.get(++index).getKey();
+        } else
+            error("new");
+    }
+
+    static void nwA() {
+        if (nextSymbol.equals("NewArray")) {
+            if (index < symbolList.size() - 1)
+                nextSymbol = symbolList.get(++index).getKey();
+        } else
+            error("NewArray");
+    }
+
+    static void com() {
+        if (nextSymbol.equals(",")) {
+            if (index < symbolList.size() - 1)
+                nextSymbol = symbolList.get(++index).getKey();
+        } else
+            error(",");
+    }
+
+    static void typ() {
+        if (nextSymbol.equals("Type")) {
+            if (index < symbolList.size() - 1)
+                nextSymbol = symbolList.get(++index).getKey();
+        } else
+            error("Type");
     }
 
 
