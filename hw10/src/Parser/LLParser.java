@@ -167,17 +167,24 @@ public class LLParser {
             addConnection(currentNodeNum, "F", "Fp", "");
             PF_prime(symbolMap.get("Fp"));
         } else {
-            error("FIRST set of Non-terminal \'E\'");
+            error("FIRST set of Non-terminal \'F\'");
         }
     }
 
 
     static void PF_prime(int currentNodeNum) {
-        if (nextSymbol.equals("id")) {
-            addConnection(currentNodeNum, "F", "id", symbolList.get(index).getValue());
-            id();
+        if (nextSymbol.equals("&&")) {
+            addConnection(currentNodeNum, "Fp", "and", "");
+            and();
+            addConnection(currentNodeNum, "Fp", "G", "");
+            PG(symbolMap.get("G"));
+            addConnection(currentNodeNum, "Fp", "Fp", "");
+            PF_prime(symbolMap.get("Fp"));
+        } else if (nextSymbol.equals(")") || nextSymbol.equals(",") || nextSymbol.equals("$")) {
+            addConnection(currentNodeNum, "Fp", "eps", "");
+            epsilon();
         } else {
-            error("FIRST set of Non-terminal \'F\'");
+            error("|| or FOLLOW set of Non-terminal \'F'\'");
         }
     }
 
@@ -288,6 +295,14 @@ public class LLParser {
                 nextSymbol = symbolList.get(++index).getKey();
         } else
             error("||");
+    }
+
+    static void and() {
+        if (nextSymbol.equals("&&")) {
+            if (index < symbolList.size() - 1)
+                nextSymbol = symbolList.get(++index).getKey();
+        } else
+            error("&&");
     }
 
     /**
