@@ -228,21 +228,49 @@ public class LLParser {
         if (nextSymbol.equals("-") || nextSymbol.equals("!") || nextSymbol.equals("(") || nextSymbol.equals("Constant") ||
                 nextSymbol.equals("this") || nextSymbol.equals("ReadInteger") || nextSymbol.equals("ReadLine") ||
                 nextSymbol.equals("new") || nextSymbol.equals("id") || nextSymbol.equals("NewArray")) {
-            addConnection(currentNodeNum, "E", "F", "");
-            PF(symbolMap.get("F"));
-            addConnection(currentNodeNum, "E", "Ep", "");
-            PE_prime(symbolMap.get("Ep"));
+            addConnection(currentNodeNum, "H", "I", "");
+            PI(symbolMap.get("I"));
+            addConnection(currentNodeNum, "H", "Hp", "");
+            PH_prime(symbolMap.get("Hp"));
         } else {
-            error("FIRST set of Non-terminal \'E\'");
+            error("FIRST set of Non-terminal \'H\'");
         }
     }
 
     static void PH_prime(int currentNodeNum) {
-        if (nextSymbol.equals("id")) {
-            addConnection(currentNodeNum, "F", "id", symbolList.get(index).getValue());
-            id();
+        if (nextSymbol.equals("<")) {
+            addConnection(currentNodeNum, "Hp", "ll", "");
+            ll();
+            addConnection(currentNodeNum, "Hp", "I", "");
+            PI(symbolMap.get("I"));
+            addConnection(currentNodeNum, "Hp", "Hp", "");
+            PH_prime(symbolMap.get("Hp"));
+        } else if (nextSymbol.equals("<=")) {
+            addConnection(currentNodeNum, "Hp", "ll", "");
+            le();
+            addConnection(currentNodeNum, "Hp", "I", "");
+            PI(symbolMap.get("I"));
+            addConnection(currentNodeNum, "Hp", "Hp", "");
+            PH_prime(symbolMap.get("Hp"));
+        } else if (nextSymbol.equals(">")) {
+            addConnection(currentNodeNum, "Hp", "ll", "");
+            gg();
+            addConnection(currentNodeNum, "Hp", "I", "");
+            PI(symbolMap.get("I"));
+            addConnection(currentNodeNum, "Hp", "Hp", "");
+            PH_prime(symbolMap.get("Hp"));
+        } else if (nextSymbol.equals(">=")) {
+            addConnection(currentNodeNum, "Hp", "ll", "");
+            ge();
+            addConnection(currentNodeNum, "Hp", "I", "");
+            PI(symbolMap.get("I"));
+            addConnection(currentNodeNum, "Hp", "Hp", "");
+            PH_prime(symbolMap.get("Hp"));
+        } else if (nextSymbol.equals(")") || nextSymbol.equals(",") || nextSymbol.equals("$")) {
+            addConnection(currentNodeNum, "Hp", "eps", "");
+            epsilon();
         } else {
-            error("FIRST set of Non-terminal \'F\'");
+            error("|| or FOLLOW set of Non-terminal \'H'\'");
         }
     }
 
@@ -250,12 +278,12 @@ public class LLParser {
         if (nextSymbol.equals("-") || nextSymbol.equals("!") || nextSymbol.equals("(") || nextSymbol.equals("Constant") ||
                 nextSymbol.equals("this") || nextSymbol.equals("ReadInteger") || nextSymbol.equals("ReadLine") ||
                 nextSymbol.equals("new") || nextSymbol.equals("id") || nextSymbol.equals("NewArray")) {
-            addConnection(currentNodeNum, "E", "F", "");
-            PF(symbolMap.get("F"));
-            addConnection(currentNodeNum, "E", "Ep", "");
-            PE_prime(symbolMap.get("Ep"));
+            addConnection(currentNodeNum, "I", "J", "");
+            PJ(symbolMap.get("J"));
+            addConnection(currentNodeNum, "I", "Ip", "");
+            PI_prime(symbolMap.get("Ip"));
         } else {
-            error("FIRST set of Non-terminal \'E\'");
+            error("FIRST set of Non-terminal \'I\'");
         }
     }
 
@@ -272,12 +300,12 @@ public class LLParser {
         if (nextSymbol.equals("-") || nextSymbol.equals("!") || nextSymbol.equals("(") || nextSymbol.equals("Constant") ||
                 nextSymbol.equals("this") || nextSymbol.equals("ReadInteger") || nextSymbol.equals("ReadLine") ||
                 nextSymbol.equals("new") || nextSymbol.equals("id") || nextSymbol.equals("NewArray")) {
-            addConnection(currentNodeNum, "E", "F", "");
-            PF(symbolMap.get("F"));
-            addConnection(currentNodeNum, "E", "Ep", "");
-            PE_prime(symbolMap.get("Ep"));
+            addConnection(currentNodeNum, "J", "K", "");
+            PK(symbolMap.get("K"));
+            addConnection(currentNodeNum, "J", "Jp", "");
+            PJ_prime(symbolMap.get("Jp"));
         } else {
-            error("FIRST set of Non-terminal \'E\'");
+            error("FIRST set of Non-terminal \'J\'");
         }
     }
 
@@ -334,6 +362,40 @@ public class LLParser {
         } else
             error("!=");
     }
+
+    static void ll() {
+        if (nextSymbol.equals("<")) {
+            if (index < symbolList.size() - 1)
+                nextSymbol = symbolList.get(++index).getKey();
+        } else
+            error("<");
+    }
+
+    static void le() {
+        if (nextSymbol.equals("<=")) {
+            if (index < symbolList.size() - 1)
+                nextSymbol = symbolList.get(++index).getKey();
+        } else
+            error("<=");
+    }
+
+    static void gg() {
+        if (nextSymbol.equals(">")) {
+            if (index < symbolList.size() - 1)
+                nextSymbol = symbolList.get(++index).getKey();
+        } else
+            error(">");
+    }
+
+    static void ge() {
+        if (nextSymbol.equals(">=")) {
+            if (index < symbolList.size() - 1)
+                nextSymbol = symbolList.get(++index).getKey();
+        } else
+            error(">=");
+    }
+
+
 
     /**
      * 터미널 기호 id
